@@ -2,4 +2,4 @@
 
 A EthGlobal art project
 
- `npm install` then `npm run dev`
+ `npm install` then `npm run dev` 
