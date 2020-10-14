@@ -1,9 +1,9 @@
 <script>
-	import { tradeStream } from './stores';
+	import { tradeStream, isMuted } from './stores';
 	const trades = tradeStream();
 
 	function handleClick() {
-		console.log('here');
+		isMuted.update(b => !b);
 		// document.getElementById("tradeList").setAttribute('style', "display :inline");
 	}
 </script>
@@ -12,7 +12,9 @@
 	<link href="https://fonts.googleapis.com/css2?family=Audiowide&display=swap" rel="stylesheet">
 	<h1>Darth Vega or Dance Vega??</h1>
 	
-	<button on:click={handleClick}>Grooove to the sound of Ethereum</button>
+	<button on:click={handleClick}>
+		{$isMuted ? 'Groove to the sound of Ethereum' : 'Mute'}
+	</button>
 
 	<ul>
 		{#each $trades.reverse() as trade (trade.id)}
