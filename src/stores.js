@@ -14,6 +14,8 @@ export function tradeStream() {
 		let trades = [];
 		const client = new SubscriptionClient(GRAPHQL_ENDPOINT, { reconnect: true });
 
+		const synth = new Tone.Synth().toDestination();
+
 		const req = client.request({ query: TRADES_QUERY }).subscribe({
 			next(res) {
 				if (res && res.data && res.data.trades) {
@@ -24,13 +26,8 @@ export function tradeStream() {
 					console.log(`Received ${res.data.trades[1].seller.id} trades`);
 
 					if (!get(isMuted)) {
-						const osc = new Tone.Oscillator().toDestination();
-						// start at "C4"
-						osc.frequency.value = "C4";
-						// ramp to "C2" over 2 seconds
-						osc.frequency.rampTo("C2", 2);
-						// start the oscillator for 2 seconds
-						osc.start().stop("+2");
+						let hz = res.data.trades.length * 10; // 30 trades -> 300hz
+						synth.triggerAttackRelease(res.data.trades.length * 10, '4n');
 					}
 				}
 			},

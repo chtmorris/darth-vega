@@ -21303,6 +21303,8 @@ var app = (function () {
     		let trades = [];
     		const client$1 = new client.SubscriptionClient(GRAPHQL_ENDPOINT, { reconnect: true });
 
+    		const synth = new Synth().toDestination();
+
     		const req = client$1.request({ query: TRADES_QUERY }).subscribe({
     			next(res) {
     				if (res && res.data && res.data.trades) {
@@ -21313,13 +21315,8 @@ var app = (function () {
     					console.log(`Received ${res.data.trades[1].seller.id} trades`);
 
     					if (!get_store_value(isMuted)) {
-    						const osc = new Oscillator().toDestination();
-    						// start at "C4"
-    						osc.frequency.value = "C4";
-    						// ramp to "C2" over 2 seconds
-    						osc.frequency.rampTo("C2", 2);
-    						// start the oscillator for 2 seconds
-    						osc.start().stop("+2");
+    						let hz = res.data.trades.length * 10; // 30 trades -> 300hz
+    						synth.triggerAttackRelease(res.data.trades.length * 10, '4n');
     					}
     				}
     			},
