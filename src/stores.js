@@ -6,7 +6,7 @@ const GRAPHQL_ENDPOINT = 'wss://lb.n.vega.xyz/query';
 const TRADES_QUERY = 'subscription { trades { price size buyer { id } seller { id } id } }';
 const MAX_TRADES = 256;
 
-export function tradeStream() {
+export function tradeStream(m) {
 	return readable([], function start(set) {
 		
 		let trades = [];
@@ -21,14 +21,15 @@ export function tradeStream() {
 
 					console.log(`Received ${res.data.trades[1].seller.id} trades`);
 
-					const osc = new Tone.Oscillator().toDestination();
-					// start at "C4"
-					osc.frequency.value = "C4";
-					// ramp to "C2" over 2 seconds
-					osc.frequency.rampTo("C2", 2);
-					// start the oscillator for 2 seconds
-					osc.start().stop("+2");
-
+					if (!m.muted) {
+						const osc = new Tone.Oscillator().toDestination();
+						// start at "C4"
+						osc.frequency.value = "C4";
+						// ramp to "C2" over 2 seconds
+						osc.frequency.rampTo("C2", 2);
+						// start the oscillator for 2 seconds
+						osc.start().stop("+2");
+					}
 				}
 			},
 			error(e) {
