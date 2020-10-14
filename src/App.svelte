@@ -1,15 +1,9 @@
 <script>
-	import { tradeStream } from './stores';
-	const mutable = {
-		muted: true,
-		toggle: function() {
-			this.muted = !this.muted;
-		},
-	};
-	const trades = tradeStream(mutable);
+	import { tradeStream, isMuted } from './stores';
+	const trades = tradeStream();
 
 	function handleClick() {
-		mutable.toggle()
+		isMuted.update(b => !b);
 		// document.getElementById("tradeList").setAttribute('style', "display :inline");
 	}
 </script>
@@ -19,7 +13,7 @@
 	<h1>Darth Vega or Dance Vega??</h1>
 	
 	<button on:click={handleClick}>
-		{mutable.muted ? 'Groove to the sound of Ethereum' : 'Mute'}
+		{$isMuted ? 'Groove to the sound of Ethereum' : 'Mute'}
 	</button>
 
 	<ul>

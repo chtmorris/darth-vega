@@ -1,4 +1,4 @@
-import { readable } from 'svelte/store';
+import { readable, writable, get } from 'svelte/store';
 import { SubscriptionClient } from 'subscriptions-transport-ws';
 import * as Tone from 'tone';
 
@@ -6,7 +6,9 @@ const GRAPHQL_ENDPOINT = 'wss://lb.n.vega.xyz/query';
 const TRADES_QUERY = 'subscription { trades { price size buyer { id } seller { id } id } }';
 const MAX_TRADES = 256;
 
-export function tradeStream(m) {
+export const isMuted = writable(true);
+
+export function tradeStream() {
 	return readable([], function start(set) {
 		
 		let trades = [];
@@ -21,7 +23,7 @@ export function tradeStream(m) {
 
 					console.log(`Received ${res.data.trades[1].seller.id} trades`);
 
-					if (!m.muted) {
+					if (!get(isMuted)) {
 						const osc = new Tone.Oscillator().toDestination();
 						// start at "C4"
 						osc.frequency.value = "C4";

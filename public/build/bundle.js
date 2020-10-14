@@ -39,6 +39,11 @@ var app = (function () {
         const unsub = store.subscribe(...callbacks);
         return unsub.unsubscribe ? () => unsub.unsubscribe() : unsub;
     }
+    function get_store_value(store) {
+        let value;
+        subscribe(store, _ => value = _)();
+        return value;
+    }
     function component_subscribe(component, store, callback) {
         component.$$.on_destroy.push(subscribe(store, callback));
     }
@@ -21290,7 +21295,9 @@ var app = (function () {
     const TRADES_QUERY = 'subscription { trades { price size buyer { id } seller { id } id } }';
     const MAX_TRADES = 256;
 
-    function tradeStream(m) {
+    const isMuted = writable(true);
+
+    function tradeStream() {
     	return readable([], function start(set) {
     		
     		let trades = [];
@@ -21305,7 +21312,7 @@ var app = (function () {
 
     					console.log(`Received ${res.data.trades[1].seller.id} trades`);
 
-    					if (!m.muted) {
+    					if (!get_store_value(isMuted)) {
     						const osc = new Oscillator().toDestination();
     						// start at "C4"
     						osc.frequency.value = "C4";
@@ -21335,7 +21342,7 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (26:2) {#each $trades.reverse() as trade (trade.id)}
+    // (20:2) {#each $trades.reverse() as trade (trade.id)}
     function create_each_block(key_1, ctx) {
     	let li;
     	let t_value = /*trade*/ ctx[4].seller.id + "";
@@ -21347,7 +21354,7 @@ var app = (function () {
     		c: function create() {
     			li = element("li");
     			t = text(t_value);
-    			add_location(li, file, 27, 2, 719);
+    			add_location(li, file, 21, 2, 629);
     			this.first = li;
     		},
     		m: function mount(target, anchor) {
@@ -21355,7 +21362,7 @@ var app = (function () {
     			append_dev(li, t);
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty & /*$trades*/ 1 && t_value !== (t_value = /*trade*/ ctx[4].seller.id + "")) set_data_dev(t, t_value);
+    			if (dirty & /*$trades*/ 2 && t_value !== (t_value = /*trade*/ ctx[4].seller.id + "")) set_data_dev(t, t_value);
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(li);
@@ -21366,7 +21373,7 @@ var app = (function () {
     		block,
     		id: create_each_block.name,
     		type: "each",
-    		source: "(26:2) {#each $trades.reverse() as trade (trade.id)}",
+    		source: "(20:2) {#each $trades.reverse() as trade (trade.id)}",
     		ctx
     	});
 
@@ -21380,13 +21387,19 @@ var app = (function () {
     	let h1;
     	let t2;
     	let button;
+
+    	let t3_value = (/*$isMuted*/ ctx[0]
+    	? "Groove to the sound of Ethereum"
+    	: "Mute") + "";
+
+    	let t3;
     	let t4;
     	let ul;
     	let each_blocks = [];
     	let each_1_lookup = new Map();
     	let mounted;
     	let dispose;
-    	let each_value = /*$trades*/ ctx[0].reverse();
+    	let each_value = /*$trades*/ ctx[1].reverse();
     	validate_each_argument(each_value);
     	const get_key = ctx => /*trade*/ ctx[4].id;
     	validate_each_keys(ctx, each_value, get_each_context, get_key);
@@ -21406,11 +21419,7 @@ var app = (function () {
     			h1.textContent = "Darth Vega or Dance Vega??";
     			t2 = space();
     			button = element("button");
-
-    			button.textContent = `${/*mutable*/ ctx[1].muted
-			? "Groove to the sound of Ethereum"
-			: "Mute"}`;
-
+    			t3 = text(t3_value);
     			t4 = space();
     			ul = element("ul");
 
@@ -21420,13 +21429,13 @@ var app = (function () {
 
     			attr_dev(link, "href", "https://fonts.googleapis.com/css2?family=Audiowide&display=swap");
     			attr_dev(link, "rel", "stylesheet");
-    			add_location(link, file, 17, 1, 335);
+    			add_location(link, file, 11, 1, 250);
     			attr_dev(h1, "class", "svelte-1a8fx6");
-    			add_location(h1, file, 18, 1, 431);
-    			add_location(button, file, 20, 1, 470);
-    			add_location(ul, file, 24, 1, 578);
+    			add_location(h1, file, 12, 1, 346);
+    			add_location(button, file, 14, 1, 385);
+    			add_location(ul, file, 18, 1, 488);
     			attr_dev(main, "class", "svelte-1a8fx6");
-    			add_location(main, file, 16, 0, 327);
+    			add_location(main, file, 10, 0, 242);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -21438,6 +21447,7 @@ var app = (function () {
     			append_dev(main, h1);
     			append_dev(main, t2);
     			append_dev(main, button);
+    			append_dev(button, t3);
     			append_dev(main, t4);
     			append_dev(main, ul);
 
@@ -21451,8 +21461,12 @@ var app = (function () {
     			}
     		},
     		p: function update(ctx, [dirty]) {
-    			if (dirty & /*$trades*/ 1) {
-    				const each_value = /*$trades*/ ctx[0].reverse();
+    			if (dirty & /*$isMuted*/ 1 && t3_value !== (t3_value = (/*$isMuted*/ ctx[0]
+    			? "Groove to the sound of Ethereum"
+    			: "Mute") + "")) set_data_dev(t3, t3_value);
+
+    			if (dirty & /*$trades*/ 2) {
+    				const each_value = /*$trades*/ ctx[1].reverse();
     				validate_each_argument(each_value);
     				validate_each_keys(ctx, each_value, get_each_context, get_key);
     				each_blocks = update_keyed_each(each_blocks, dirty, get_key, 1, ctx, each_value, each_1_lookup, ul, destroy_block, create_each_block, null, get_each_context);
@@ -21484,23 +21498,18 @@ var app = (function () {
     }
 
     function instance($$self, $$props, $$invalidate) {
+    	let $isMuted;
     	let $trades;
+    	validate_store(isMuted, "isMuted");
+    	component_subscribe($$self, isMuted, $$value => $$invalidate(0, $isMuted = $$value));
     	let { $$slots: slots = {}, $$scope } = $$props;
     	validate_slots("App", slots, []);
-
-    	const mutable = {
-    		muted: true,
-    		toggle() {
-    			this.muted = !this.muted;
-    		}
-    	};
-
-    	const trades = tradeStream(mutable);
+    	const trades = tradeStream();
     	validate_store(trades, "trades");
-    	component_subscribe($$self, trades, value => $$invalidate(0, $trades = value));
+    	component_subscribe($$self, trades, value => $$invalidate(1, $trades = value));
 
     	function handleClick() {
-    		mutable.toggle();
+    		isMuted.update(b => !b);
     	} // document.getElementById("tradeList").setAttribute('style', "display :inline");
 
     	const writable_props = [];
@@ -21511,13 +21520,14 @@ var app = (function () {
 
     	$$self.$capture_state = () => ({
     		tradeStream,
-    		mutable,
+    		isMuted,
     		trades,
     		handleClick,
+    		$isMuted,
     		$trades
     	});
 
-    	return [$trades, mutable, trades, handleClick];
+    	return [$isMuted, $trades, trades, handleClick];
     }
 
     class App extends SvelteComponentDev {
