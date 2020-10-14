@@ -5,7 +5,7 @@ import { tweened } from 'svelte/motion';
 
 const GRAPHQL_ENDPOINT = 'wss://lb.n.vega.xyz/query';
 const TRADES_QUERY = 'subscription { trades { price size buyer { id } seller { id } id } }';
-const MAX_TRADES = 256;
+const MAX_TRADES = 10;
 
 export const isMuted = writable(true);
 

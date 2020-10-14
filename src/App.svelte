@@ -1,5 +1,4 @@
 <script>
-	import { fade, fly } from 'svelte/transition';
 	import { tradeStream, isMuted } from './stores';
 	const trades = tradeStream();
 
@@ -20,7 +19,7 @@
 	<ul class="trades">
 		{#each $trades.reverse() as trade (trade.id)}
 			<!-- <li style="left: {trade.tween}">{trade.timestamp} - {trade.size} @ {trade.price} {trade.seller.id} ➡ {trade.buyer.id}</li> -->
-			<li in:fly="{{ x: 1000, duration: 5000 }}" out:fade  style="margin-top: {trade.idx * 20}px">o</li>
+			<li style="margin-top: {trade.idx * 20}px"></li>
 		{/each}
 	</ul>
 	
@@ -29,8 +28,17 @@
 <style>
 	:global(body)  {
 		background: black;
+		position: fixed; 
+		overflow-y: scroll;
+		width: 100%;
 	}
 
+	.trades {
+		display: block;
+		position: absolute;
+		width: 100%;
+		left: 0;
+	}
 	.trades li {
 		display: block;
 		position: absolute;
@@ -38,6 +46,19 @@
 		width: 20px;
 		height: 20px;
 		background: red;
+
+		-webkit-animation: slide 5s forwards;
+		-webkit-animation-delay: 0s;
+		animation: slide 5s forwards;
+		animation-delay: 0s;
+	}
+
+	@-webkit-keyframes slide {
+		100% { left: 100%; }
+	}
+
+	@keyframes slide {
+		100% { left: 100%; }
 	}
 
 	main {
