@@ -28,8 +28,10 @@ export function tradeStream() {
 					console.log(`Received ${res.data.trades[1].seller.id} trades`);
 
 					if (!get(isMuted)) {
-						let hz = res.data.trades.length * 10; // 30 trades -> 300hz
-						synth.triggerAttackRelease(res.data.trades.length * 10, '4n');
+						// Play the funky music
+						//const note = res.data.trades.length * 10; // 30 trades -> 300hz
+						const note = Tone.Frequency("C1").transpose(res.data.trades.length);
+						synth.triggerAttackRelease(note, '4n');
 					}
 				}
 			},
