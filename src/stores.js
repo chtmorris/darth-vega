@@ -30,7 +30,8 @@ export function tradeStream() {
 					if (!get(isMuted)) {
 						// Play the funky music
 						//const note = res.data.trades.length * 10; // 30 trades -> 300hz
-						const note = Tone.Frequency("C1").transpose(res.data.trades.length);
+						const note = ["D3", "F3", "A3", "C3", "E3"][res.data.trades.length % 5];
+						//const note = Tone.Frequency("C1").transpose(res.data.trades.length);
 						synth.triggerAttackRelease(note, '4n');
 					}
 				}
