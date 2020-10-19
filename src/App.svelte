@@ -8,7 +8,9 @@
 	}
 
 	function showPopup() {
-		document.getElementById("popup").style.display = "block";
+		const el = document.getElementById("popup");
+		if (el.style.display == "block") el.style.display = "none";
+		else el.style.display = "block";
 	}
 
 	function hidePopup() {
@@ -71,7 +73,7 @@
 		text-align: center;
 		background: #ffa928;
 		width: 100%;
-		font-size: 2em;
+		font-size: 1.5em;
 		color: rgba(0, 0, 0, 0.4);
 		font-family: 'Audiowide', cursive;
 	}
