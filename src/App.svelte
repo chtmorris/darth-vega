@@ -42,10 +42,9 @@
 	
 
 	<ul class="trades">
-		{#each $trades.reverse() as trade (trade.id)}
+		{#each $trades as block (block.id)}
 			<!-- <li style="left: {trade.tween}">{trade.timestamp} - {trade.size} @ {trade.price} {trade.seller.id} ➡ {trade.buyer.id}</li> -->
-			<li style="margin-top: {trade.idx * 20}px"></li>
-			<li style="background: #24FFA4"></li>
+			<li style="margin-top: {(block.id % 5)}em; padding-right: {block.length*2}px"></li>
 		{/each}
 	</ul>
 
@@ -69,15 +68,27 @@
 	.trades li {
 		display: block;
 		position: absolute;
+		font-size: 50px;
 		left: 0;
 		width: 40px;
-		height: 20px;
+		height: 1em;
 		background: #FF247F;
 
-		-webkit-animation: slide 1s forwards;
+		-webkit-animation: slide 5s forwards;
 		-webkit-animation-delay: 0s;
-		animation: slide 1s forwards;
+		animation: slide 5s forwards;
 		animation-delay: 0s;
+	}
+
+	.trades li::before {
+		display: block;
+		position: absolute;
+		background: #24FFA4;
+		padding-left: -1em;
+		margin-left: -1.5em;
+		width: 1em;
+		height: 1em;
+		content: " ";
 	}
 
 	@-webkit-keyframes slide {
