@@ -1,5 +1,5 @@
 <script>
-	import { tradeStream, isMuted } from './stores';
+	import { tradeStream, isMuted, ticker } from './stores';
 	const trades = tradeStream();
 
 	function handleClick() {
@@ -48,6 +48,10 @@
 		{/each}
 	</ul>
 
+	<div class="ticker">
+		Latest block: {$ticker.length}
+	</div>
+
 	
 </main>
 
@@ -57,6 +61,19 @@
 		position: fixed; 
 		overflow-y: scroll;
 		width: 100%;
+	}
+
+	.ticker {
+		position: fixed;
+		bottom: 0;
+		left: 0;
+		line-height: 1.5em;
+		text-align: center;
+		background: #ffa928;
+		width: 100%;
+		font-size: 2em;
+		color: rgba(0, 0, 0, 0.4);
+		font-family: 'Audiowide', cursive;
 	}
 
 	.trades {

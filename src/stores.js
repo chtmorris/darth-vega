@@ -9,6 +9,8 @@ const MAX_BLOCKS = 6;
 
 export const isMuted = writable(true);
 
+export const ticker = writable({});
+
 export function tradeStream() {
 	return readable([], function start(set) {
 		let count = 0;
@@ -36,6 +38,8 @@ export function tradeStream() {
 				blocks.push(block);
 				if (blocks.length > MAX_BLOCKS) blocks.shift();
 				set(blocks);
+
+				ticker.update(b => block);
 
 				if (!get(isMuted)) {
 					// Play the funky music
