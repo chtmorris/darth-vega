@@ -44,7 +44,7 @@
 	<ul class="trades">
 		{#each $trades as block (block.id)}
 			<!-- <li style="left: {trade.tween}">{trade.timestamp} - {trade.size} @ {trade.price} {trade.seller.id} ➡ {trade.buyer.id}</li> -->
-			<li style="margin-top: {(block.id % 5)}em; padding-right: {block.length*2}px"></li>
+			<li style="margin-top: {(block.lane % 5)*1.5}em; padding-right: {block.length*2}px"></li>
 		{/each}
 	</ul>
 
@@ -74,9 +74,9 @@
 		height: 1em;
 		background: #FF247F;
 
-		-webkit-animation: slide 5s forwards;
+		-webkit-animation: slide 6s forwards;
 		-webkit-animation-delay: 0s;
-		animation: slide 5s forwards;
+		animation: slide 6s forwards;
 		animation-delay: 0s;
 	}
 

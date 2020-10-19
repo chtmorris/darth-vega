@@ -5,8 +5,7 @@ import { tweened } from 'svelte/motion';
 
 const GRAPHQL_ENDPOINT = 'wss://lb.n.vega.xyz/query';
 const TRADES_QUERY = 'subscription { trades { price size buyer { id } seller { id } id } }';
-const MAX_TRADES = 10;
-const MAX_BLOCKS = 5;
+const MAX_BLOCKS = 6;
 
 export const isMuted = writable(true);
 
@@ -17,6 +16,8 @@ export function tradeStream() {
 		let blocks = [];
 		const client = new SubscriptionClient(GRAPHQL_ENDPOINT, { reconnect: true });
 
+		const lanes = ["D3", "F3", "A3", "C3", "E3"];
+
 		const synth = new Tone.Synth().toDestination();
 
 		const req = client.request({ query: TRADES_QUERY }).subscribe({
@@ -26,8 +27,12 @@ export function tradeStream() {
 					return;
 				}
 
+				const lane = res.data.trades.length % lanes.length;
+
 				const block = res.data.trades;
 				block.id = count++;
+				block.lane = lane;
+
 				blocks.push(block);
 				if (blocks.length > MAX_BLOCKS) blocks.shift();
 				set(blocks);
@@ -35,7 +40,7 @@ export function tradeStream() {
 				if (!get(isMuted)) {
 					// Play the funky music
 					//const note = res.data.trades.length * 10; // 30 trades -> 300hz
-					const note = ["D3", "F3", "A3", "C3", "E3"][res.data.trades.length % 5];
+					const note = lanes[lane];
 					//const note = Tone.Frequency("C1").transpose(res.data.trades.length);
 					synth.triggerAttackRelease(note, '4n');
 				}
