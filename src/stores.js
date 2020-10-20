@@ -18,7 +18,8 @@ export function tradeStream() {
 		let blocks = [];
 		const client = new SubscriptionClient(GRAPHQL_ENDPOINT, { reconnect: true });
 
-		const lanes = ["D3", "F3", "A3", "C3", "E3"];
+		// Darth vibes: G  G  G  E  Bb  G  E  Bb  G  2D  2D  2D  2Eb  Bb  F#  E  Bb  G
+		const lanes = ["E2", "G2", "G2", "G2", "Bb2"];
 
 		const synth = new Tone.Synth().toDestination();
 
