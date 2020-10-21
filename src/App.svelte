@@ -51,7 +51,7 @@
 	</ul>
 
 	<div class="ticker">
-		Latest block: {$ticker.length}
+		Trades per block: {$ticker.length}
 	</div>
 
 	
@@ -71,7 +71,7 @@
 		left: 0;
 		line-height: 1.5em;
 		text-align: center;
-		background: #ffa928;
+		background: #24FFA4;
 		width: 100%;
 		font-size: 1.5em;
 		color: rgba(0, 0, 0, 0.4);
